@@ -51,6 +51,9 @@ function WeighingForm() {
   const [currentTime, setCurrentTime] = useState("");
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // tRPC mutation 훅
+  const createWeighing = trpc.weighing.create.useMutation();
 
   // 현재 날짜와 시간 업데이트
   useEffect(() => {
@@ -104,7 +107,7 @@ function WeighingForm() {
     
     try {
       // tRPC API 호출
-      const result = await trpc.weighing.create.mutate({
+      const result = await createWeighing.mutateAsync({
         location,
         company: values.company,
         driverName: values.driverName,
