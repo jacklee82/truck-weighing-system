@@ -1,5 +1,5 @@
 import { publicProcedure, router } from "../index";
-import { weighingRouter } from "./weighing";
+import { weighingRouter } from "./weighing-raw";
 
 export const appRouter = router({
 	healthCheck: publicProcedure.query(() => {

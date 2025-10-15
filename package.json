@@ -32,13 +32,9 @@
   "dependencies": {
     "@types/qrcode": "^1.5.5",
     "dotenv": "^17.2.2",
-    "drizzle-orm": "^0.44.6",
     "pg": "^8.16.3",
     "qrcode": "^1.5.4",
     "zod": "^4.1.12"
-  },
-  "overrides": {
-    "drizzle-orm": "^0.44.6"
   },
   "devDependencies": {
     "turbo": "^2.5.4",

@@ -21,12 +21,11 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "@my-better-t-app/db": "workspace:*",
     "@trpc/client": "catalog:",
     "@trpc/server": "catalog:",
     "dotenv": "catalog:",
     "next": "catalog:",
     "zod": "catalog:",
-    "drizzle-orm": "catalog:"
+    "pg": "catalog:"
   }
 }
