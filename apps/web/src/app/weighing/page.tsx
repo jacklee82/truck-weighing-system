@@ -112,7 +112,7 @@ function WeighingForm() {
         company: values.company,
         driverName: values.driverName,
         phoneNumber: values.phoneNumber,
-        weight: values.weight,
+        weight: parseFloat(values.weight),
         photoUrl: photoPreview || undefined,
       });
       
