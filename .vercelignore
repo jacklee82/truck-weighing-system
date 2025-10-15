@@ -1,3 +1,17 @@
+# Force complete rebuild - ignore everything that could cause cache issues
+node_modules/
+**/node_modules/
+bun.lockb
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Ignore build artifacts
+dist/
+build/
+.next/
+out/
+
 # Ignore development files
 *.log
 .DS_Store
@@ -6,23 +20,11 @@
 .env.test.local
 .env.production.local
 
-# Ignore build artifacts
-dist/
-build/
-.next/
-out/
-
-# Ignore lock files to force fresh install
-bun.lockb
-package-lock.json
-yarn.lock
-
-# Ignore node_modules in subdirectories
-apps/web/node_modules/
-packages/api/node_modules/
-packages/db/node_modules/
-
-# Force Vercel to use root dependencies
+# Force Vercel to use root dependencies only
 apps/web/package-lock.json
 packages/api/package-lock.json
 packages/db/package-lock.json
+
+# Ignore any cached drizzle files
+**/.drizzle/
+**/drizzle/

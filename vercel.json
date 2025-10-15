@@ -12,9 +12,9 @@
       "dest": "apps/web/$1"
     }
   ],
-  "buildCommand": "cd apps/web && bun run build",
-  "installCommand": "bun install --frozen-lockfile",
-  "ignoreCommand": "echo 'Force fresh install for Drizzle monorepo fix'",
+  "buildCommand": "rm -rf node_modules apps/web/node_modules packages/*/node_modules && bun install && cd apps/web && bun run build",
+  "installCommand": "bun install --no-cache --force",
+  "ignoreCommand": "echo 'Force complete rebuild for Drizzle fix'",
   "functions": {
     "apps/web/src/app/api/**/*.ts": {
       "runtime": "nodejs20.x"
