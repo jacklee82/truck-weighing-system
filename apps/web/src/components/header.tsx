@@ -5,7 +5,8 @@ import { UserMenu } from "./auth/user-menu";
 
 export default function Header() {
   const links = [
-    { to: "/", label: "Home" }
+    { to: "/", label: "Home" },
+    { to: "/admin", label: "관리자" }
   ] as const;
 
 	return (
