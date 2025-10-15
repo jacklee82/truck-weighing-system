@@ -36,9 +36,15 @@ const formSchema = z.object({
   notes: z.string().optional(),
 });
 
-export default function WeighingPage() {
-  const searchParams = useSearchParams();
-  const location = searchParams.get("location") || "알 수 없음";
+function WeighingForm() {
+  const [location, setLocation] = useState("알 수 없음");
+  
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      setLocation(params.get("location") || "알 수 없음");
+    }
+  }, []);
   
   const [currentDate, setCurrentDate] = useState("");
   const [currentTime, setCurrentTime] = useState("");
@@ -397,4 +403,8 @@ export default function WeighingPage() {
       </div>
     </div>
   );
+}
+
+export default function WeighingPage() {
+  return <WeighingForm />;
 }
