@@ -1,9 +1,10 @@
-import { Pool } from 'pg';
+import { createClient } from '@supabase/supabase-js';
 
-// PostgreSQL 연결 풀
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL || 'postgresql://postgres:password@localhost:5432/truck_weighing',
-});
+// Supabase 클라이언트
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://qsqnejqjlhtwvzqxamyk.supabase.co',
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFzcW5lanFqbGh0d3Z6cXhhbXlrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA0MjU4MTYsImV4cCI6MjA3NjAwMTgxNn0.HVA9wnRpTJUIwEcX9UQyl9qs3Nk0kuqL8SbdXfGP_9o'
+);
 
 // 타입 정의 (기존 Drizzle 스키마와 동일)
 export interface VehicleLog {
@@ -24,7 +25,7 @@ export interface Company {
   createdAt: Date;
 }
 
-// Raw SQL 함수들
+// Supabase 함수들
 export const dbRaw = {
   // 계근 기록 생성
   async createVehicleLog(data: {
@@ -35,57 +36,56 @@ export const dbRaw = {
     weight: string;
     photoUrl?: string;
   }): Promise<VehicleLog> {
-    const result = await pool.query(`
-      INSERT INTO vehicle_logs (location, company, driver_name, phone_number, weight, photo_url)
-      VALUES ($1, $2, $3, $4, $5, $6)
-      RETURNING *
-    `, [data.location, data.company, data.driverName, data.phoneNumber, data.weight, data.photoUrl]);
+    const { data: result, error } = await supabase
+      .from('vehicle_logs')
+      .insert({
+        location: data.location,
+        company: data.company,
+        driver_name: data.driverName,
+        phone_number: data.phoneNumber,
+        weight: data.weight,
+        photo_url: data.photoUrl
+      })
+      .select()
+      .single();
     
-    return result.rows[0];
+    if (error) throw error;
+    return result;
   },
 
   // 계근 기록 목록 조회
   async getVehicleLogs(limit: number, offset: number): Promise<VehicleLog[]> {
-    try {
-      const result = await pool.query(`
-        SELECT id, location, company, driver_name, phone_number, weight, photo_url, created_at
-        FROM vehicle_logs
-        ORDER BY created_at DESC
-        LIMIT $1 OFFSET $2
-      `, [limit, offset]);
-      
-      return result.rows;
-    } catch (error) {
-      console.error('getVehicleLogs error:', error);
-      throw error;
-    }
+    const { data, error } = await supabase
+      .from('vehicle_logs')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .range(offset, offset + limit - 1);
+    
+    if (error) throw error;
+    return data || [];
   },
 
   // 활성 회사 목록 조회
   async getActiveCompanies(): Promise<Company[]> {
-    try {
-      const result = await pool.query(`
-        SELECT id, name, is_active, created_at
-        FROM companies
-        WHERE is_active = true
-        ORDER BY name
-      `);
-      
-      return result.rows;
-    } catch (error) {
-      console.error('getActiveCompanies error:', error);
-      throw error;
-    }
+    const { data, error } = await supabase
+      .from('companies')
+      .select('*')
+      .eq('is_active', true)
+      .order('name');
+    
+    if (error) throw error;
+    return data || [];
   },
 
   // 회사 추가
   async createCompany(name: string): Promise<Company> {
-    const result = await pool.query(`
-      INSERT INTO companies (name)
-      VALUES ($1)
-      RETURNING *
-    `, [name]);
+    const { data, error } = await supabase
+      .from('companies')
+      .insert({ name })
+      .select()
+      .single();
     
-    return result.rows[0];
+    if (error) throw error;
+    return data;
   }
 };
