@@ -19,10 +19,15 @@ export default function AdminPage() {
 
   // 검색 및 날짜 필터링
   const filteredLogs = logs.filter(log => {
+    // 안전한 문자열 검색 (undefined 체크)
+    const driverName = log.driverName || '';
+    const company = log.company || '';
+    const location = log.location || '';
+    
     const matchesSearch = 
-      log.driverName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      log.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      log.location.toLowerCase().includes(searchTerm.toLowerCase());
+      driverName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      company.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      location.toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesDate = !dateFilter || 
       new Date(log.createdAt).toISOString().split('T')[0] === dateFilter;
