@@ -2,7 +2,7 @@ import { Pool } from 'pg';
 
 // PostgreSQL 연결 풀
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: process.env.DATABASE_URL || 'postgresql://postgres:password@localhost:5432/truck_weighing',
 });
 
 // 타입 정의 (기존 Drizzle 스키마와 동일)
@@ -46,24 +46,36 @@ export const dbRaw = {
 
   // 계근 기록 목록 조회
   async getVehicleLogs(limit: number, offset: number): Promise<VehicleLog[]> {
-    const result = await pool.query(`
-      SELECT * FROM vehicle_logs
-      ORDER BY created_at DESC
-      LIMIT $1 OFFSET $2
-    `, [limit, offset]);
-    
-    return result.rows;
+    try {
+      const result = await pool.query(`
+        SELECT id, location, company, driver_name, phone_number, weight, photo_url, created_at
+        FROM vehicle_logs
+        ORDER BY created_at DESC
+        LIMIT $1 OFFSET $2
+      `, [limit, offset]);
+      
+      return result.rows;
+    } catch (error) {
+      console.error('getVehicleLogs error:', error);
+      throw error;
+    }
   },
 
   // 활성 회사 목록 조회
   async getActiveCompanies(): Promise<Company[]> {
-    const result = await pool.query(`
-      SELECT * FROM companies
-      WHERE is_active = true
-      ORDER BY name
-    `);
-    
-    return result.rows;
+    try {
+      const result = await pool.query(`
+        SELECT id, name, is_active, created_at
+        FROM companies
+        WHERE is_active = true
+        ORDER BY name
+      `);
+      
+      return result.rows;
+    } catch (error) {
+      console.error('getActiveCompanies error:', error);
+      throw error;
+    }
   },
 
   // 회사 추가
