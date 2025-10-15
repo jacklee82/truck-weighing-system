@@ -1,5 +1,5 @@
 import { QueryCache, QueryClient } from "@tanstack/react-query";
-import { createTRPCReact } from "@trpc/react-query";
+import { createTRPCReact } from "@trpc/tanstack-react-query";
 import { httpBatchLink } from "@trpc/client";
 import type { AppRouter } from "@my-better-t-app/api/routers/index";
 import { toast } from "sonner";
