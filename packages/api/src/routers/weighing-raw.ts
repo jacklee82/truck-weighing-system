@@ -3,6 +3,27 @@ import { publicProcedure, router } from "..";
 import { dbRaw } from "../lib/db-raw";
 
 export const weighingRouter = router({
+  // 데이터베이스 연결 테스트
+  testConnection: publicProcedure.query(async () => {
+    try {
+      const { dbRaw } = await import("../lib/db-raw");
+      // 간단한 쿼리로 연결 테스트
+      const result = await dbRaw.getActiveCompanies();
+      return { 
+        success: true, 
+        message: "Database connection successful",
+        companiesCount: result.length 
+      };
+    } catch (error) {
+      console.error('Database connection test failed:', error);
+      return { 
+        success: false, 
+        message: error instanceof Error ? error.message : 'Unknown error',
+        error: String(error)
+      };
+    }
+  }),
+
   // 계근 기록 생성
   create: publicProcedure
     .input(
