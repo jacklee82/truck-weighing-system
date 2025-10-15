@@ -25,6 +25,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
+import { api } from "@/utils/trpc";
 
 // 폼 유효성 검증 스키마
 const formSchema = z.object({
@@ -50,6 +51,10 @@ function WeighingForm() {
   const [currentTime, setCurrentTime] = useState("");
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // tRPC 훅 사용
+  const { data: companies = [] } = api.weighing.getCompanies.useQuery();
+  const createWeighing = api.weighing.create.useMutation();
 
   // 현재 날짜와 시간 업데이트
   useEffect(() => {
@@ -102,19 +107,18 @@ function WeighingForm() {
     setIsSubmitting(true);
     
     try {
-      // 임시 로그 (개발용)
-      const logData = {
+      // tRPC를 통해 실제 데이터 저장
+      const result = await createWeighing.mutateAsync({
         location,
         company: values.company,
         driverName: values.driverName,
         phoneNumber: values.phoneNumber,
         weight: parseFloat(values.weight),
-        photoUrl: photoPreview,
+        photoUrl: photoPreview || undefined,
         notes: values.notes,
-        createdAt: new Date().toISOString(),
-      };
+      });
       
-      console.log("계근 데이터:", logData);
+      console.log("계근 데이터 저장 완료:", result);
       
       // 성공 메시지
       toast.success("계근이 완료되었습니다!", {
@@ -135,13 +139,11 @@ function WeighingForm() {
     }
   };
 
-  // 회사 목록 (실제로는 API에서 가져와야 함)
-  const companies = [
-    { value: "company1", label: "○○물류" },
-    { value: "company2", label: "△△운송" },
-    { value: "company3", label: "□□화물" },
-    { value: "company4", label: "◇◇택배" },
-  ];
+  // API에서 가져온 회사 목록을 폼에 맞게 변환
+  const companyOptions = companies.map(company => ({
+    value: company.name,
+    label: company.name,
+  }));
 
 	return (
     <div className="min-h-screen bg-white p-4 md:p-8">
@@ -192,7 +194,7 @@ function WeighingForm() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {companies.map((company) => (
+                          {companyOptions.map((company) => (
                             <SelectItem 
                               key={company.value} 
                               value={company.value}
