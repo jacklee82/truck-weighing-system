@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { publicProcedure, router } from "..";
 import { db, vehicleLogs, companies } from "@my-better-t-app/db";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 
 export const weighingRouter = router({
   // 계근 기록 생성
@@ -42,7 +42,7 @@ export const weighingRouter = router({
       const logs = await db
         .select()
         .from(vehicleLogs)
-        .orderBy(vehicleLogs.createdAt)
+        .orderBy(desc(vehicleLogs.createdAt))
         .limit(input.limit)
         .offset(input.offset);
       
