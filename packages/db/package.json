@@ -27,7 +27,7 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "pg": "^8.16.3",
+    "pg": "catalog:",
     "dotenv": "catalog:",
     "zod": "catalog:"
   }
