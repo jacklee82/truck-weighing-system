@@ -12,7 +12,12 @@
       "dest": "apps/web/$1"
     }
   ],
-  "buildCommand": "bun run build",
-  "installCommand": "bun install",
-  "ignoreCommand": "echo 'Ignoring cache for monorepo Drizzle fix'"
+  "buildCommand": "cd apps/web && bun run build",
+  "installCommand": "bun install --frozen-lockfile",
+  "ignoreCommand": "echo 'Force fresh install for Drizzle monorepo fix'",
+  "functions": {
+    "apps/web/src/app/api/**/*.ts": {
+      "runtime": "nodejs20.x"
+    }
+  }
 }

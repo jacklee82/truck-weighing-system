@@ -24,7 +24,8 @@
     "tsdown": "catalog:"
   },
   "peerDependencies": {
-    "typescript": "^5"
+    "typescript": "^5",
+    "drizzle-orm": "^0.44.6"
   },
   "dependencies": {
     "pg": "catalog:",
