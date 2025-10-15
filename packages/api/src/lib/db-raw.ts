@@ -46,35 +46,87 @@ export const dbRaw = {
         weight: data.weight,
         photo_url: data.photoUrl
       })
-      .select()
+      .select(`
+        id,
+        location,
+        company,
+        driver_name,
+        phone_number,
+        weight,
+        photo_url,
+        created_at
+      `)
       .single();
     
     if (error) throw error;
-    return result;
+    
+    // snake_case를 camelCase로 변환
+    return {
+      id: result.id,
+      location: result.location,
+      company: result.company,
+      driverName: result.driver_name,
+      phoneNumber: result.phone_number,
+      weight: result.weight,
+      photoUrl: result.photo_url,
+      createdAt: result.created_at
+    };
   },
 
   // 계근 기록 목록 조회
   async getVehicleLogs(limit: number, offset: number): Promise<VehicleLog[]> {
     const { data, error } = await supabase
       .from('vehicle_logs')
-      .select('*')
+      .select(`
+        id,
+        location,
+        company,
+        driver_name,
+        phone_number,
+        weight,
+        photo_url,
+        created_at
+      `)
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1);
     
     if (error) throw error;
-    return data || [];
+    
+    // snake_case를 camelCase로 변환
+    return (data || []).map(log => ({
+      id: log.id,
+      location: log.location,
+      company: log.company,
+      driverName: log.driver_name,
+      phoneNumber: log.phone_number,
+      weight: log.weight,
+      photoUrl: log.photo_url,
+      createdAt: log.created_at
+    }));
   },
 
   // 활성 회사 목록 조회
   async getActiveCompanies(): Promise<Company[]> {
     const { data, error } = await supabase
       .from('companies')
-      .select('*')
+      .select(`
+        id,
+        name,
+        is_active,
+        created_at
+      `)
       .eq('is_active', true)
       .order('name');
     
     if (error) throw error;
-    return data || [];
+    
+    // snake_case를 camelCase로 변환
+    return (data || []).map(company => ({
+      id: company.id,
+      name: company.name,
+      isActive: company.is_active,
+      createdAt: company.created_at
+    }));
   },
 
   // 회사 추가
@@ -82,10 +134,22 @@ export const dbRaw = {
     const { data, error } = await supabase
       .from('companies')
       .insert({ name })
-      .select()
+      .select(`
+        id,
+        name,
+        is_active,
+        created_at
+      `)
       .single();
     
     if (error) throw error;
-    return data;
+    
+    // snake_case를 camelCase로 변환
+    return {
+      id: data.id,
+      name: data.name,
+      isActive: data.is_active,
+      createdAt: data.created_at
+    };
   }
 };

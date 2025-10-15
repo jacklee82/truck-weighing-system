@@ -102,29 +102,17 @@ function WeighingForm() {
     setIsSubmitting(true);
     
     try {
-      // tRPC API 호출 (실제 구현 시 주석 해제)
-      // const result = await trpc.weighing.create.mutate({
-      //   location,
-      //   company: values.company,
-      //   driverName: values.driverName,
-      //   phoneNumber: values.phoneNumber,
-      //   weight: parseFloat(values.weight),
-      //   photoUrl: photoPreview || undefined,
-      // });
-      
-      // 임시 로그 (개발용)
-      const logData = {
+      // tRPC API 호출
+      const result = await trpc.weighing.create.mutate({
         location,
         company: values.company,
         driverName: values.driverName,
         phoneNumber: values.phoneNumber,
-        weight: parseFloat(values.weight),
-        photoUrl: photoPreview,
-        notes: values.notes,
-        createdAt: new Date().toISOString(),
-      };
+        weight: values.weight,
+        photoUrl: photoPreview || undefined,
+      });
       
-      console.log("계근 데이터:", logData);
+      console.log("계근 데이터 저장 완료:", result);
       
       // 성공 메시지
       toast.success("계근이 완료되었습니다!", {
@@ -145,13 +133,12 @@ function WeighingForm() {
     }
   };
 
-  // 회사 목록 (실제로는 API에서 가져와야 함)
-  const companies = [
-    { value: "company1", label: "○○물류" },
-    { value: "company2", label: "△△운송" },
-    { value: "company3", label: "□□화물" },
-    { value: "company4", label: "◇◇택배" },
-  ];
+  // 회사 목록 API에서 가져오기
+  const { data: companiesData = [] } = trpc.weighing.getCompanies.useQuery();
+  const companies = companiesData.map(company => ({
+    value: company.name,
+    label: company.name,
+  }));
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white p-4 md:p-8">
