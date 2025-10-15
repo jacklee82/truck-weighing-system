@@ -25,7 +25,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { api } from "@/utils/trpc";
+import { trpc } from "@/utils/trpc";
 
 // 폼 유효성 검증 스키마
 const formSchema = z.object({
@@ -53,8 +53,8 @@ function WeighingForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // tRPC 훅 사용
-  const { data: companies = [] } = api.weighing.getCompanies.useQuery();
-  const createWeighing = api.weighing.create.useMutation();
+  const { data: companies = [] } = trpc.weighing.getCompanies.useQuery();
+  const createWeighing = trpc.weighing.create.useMutation();
 
   // 현재 날짜와 시간 업데이트
   useEffect(() => {
