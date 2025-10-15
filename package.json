@@ -12,6 +12,7 @@
       "zod": "^4.1.12",
       "@trpc/server": "^11.5.0",
       "@trpc/client": "^11.5.0",
+      "@supabase/supabase-js": "^2.75.0",
       "dotenv": "^17.2.2",
       "tsdown": "^0.15.5",
       "drizzle-orm": "^0.44.6",
@@ -31,6 +32,7 @@
   },
   "dependencies": {
     "@types/qrcode": "^1.5.5",
+    "@supabase/supabase-js": "^2.75.0",
     "dotenv": "^17.2.2",
     "pg": "^8.16.3",
     "qrcode": "^1.5.4",

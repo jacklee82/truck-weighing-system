@@ -23,6 +23,7 @@
   "dependencies": {
     "@trpc/client": "catalog:",
     "@trpc/server": "catalog:",
+    "@supabase/supabase-js": "catalog:",
     "dotenv": "catalog:",
     "next": "catalog:",
     "zod": "catalog:",
