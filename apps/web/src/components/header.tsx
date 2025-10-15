@@ -5,8 +5,7 @@ import { UserMenu } from "./auth/user-menu";
 
 export default function Header() {
   const links = [
-    { to: "/", label: "Home" },
-    { to: "/admin/qr-generator", label: "QR 생성기" }
+    { to: "/", label: "Home" }
   ] as const;
 
 	return (
