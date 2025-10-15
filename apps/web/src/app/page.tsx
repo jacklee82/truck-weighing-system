@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -36,9 +36,15 @@ const formSchema = z.object({
   notes: z.string().optional(),
 });
 
-export default function Home() {
-  const searchParams = useSearchParams();
-  const location = searchParams.get("location") || "1번 계근대";
+function WeighingForm() {
+  const [location, setLocation] = useState("1번 계근대");
+  
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      setLocation(params.get("location") || "1번 계근대");
+    }
+  }, []);
   
   const [currentDate, setCurrentDate] = useState("");
   const [currentTime, setCurrentTime] = useState("");
@@ -359,7 +365,15 @@ export default function Home() {
           </CardContent>
         </Card>
 
-			</div>
-		</div>
-	);
+      </div>
+    </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div>로딩 중...</div>}>
+      <WeighingForm />
+    </Suspense>
+  );
 }
