@@ -126,7 +126,9 @@ export default function AdminPage() {
                               src={log.photoUrl}
                               alt="계근 사진"
                               className="w-16 h-16 object-cover rounded border cursor-pointer hover:scale-110 transition-transform"
-                              onClick={() => window.open(log.photoUrl, '_blank')}
+                              onClick={() => {
+                                if (log.photoUrl) window.open(log.photoUrl, '_blank');
+                              }}
                             />
                           ) : (
                             <span className="text-gray-400 text-sm">없음</span>
