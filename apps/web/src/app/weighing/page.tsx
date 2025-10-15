@@ -36,9 +36,9 @@ const formSchema = z.object({
   notes: z.string().optional(),
 });
 
-export default function Home() {
+export default function WeighingPage() {
   const searchParams = useSearchParams();
-  const location = searchParams.get("location") || "1번 계근대";
+  const location = searchParams.get("location") || "알 수 없음";
   
   const [currentDate, setCurrentDate] = useState("");
   const [currentTime, setCurrentTime] = useState("");
@@ -96,6 +96,16 @@ export default function Home() {
     setIsSubmitting(true);
     
     try {
+      // tRPC API 호출 (실제 구현 시 주석 해제)
+      // const result = await trpc.weighing.create.mutate({
+      //   location,
+      //   company: values.company,
+      //   driverName: values.driverName,
+      //   phoneNumber: values.phoneNumber,
+      //   weight: parseFloat(values.weight),
+      //   photoUrl: photoPreview || undefined,
+      // });
+      
       // 임시 로그 (개발용)
       const logData = {
         location,
@@ -137,29 +147,35 @@ export default function Home() {
     { value: "company4", label: "◇◇택배" },
   ];
 
-	return (
-    <div className="min-h-screen bg-white p-4 md:p-8">
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white p-4 md:p-8">
       <div className="max-w-3xl mx-auto space-y-6">
         {/* 헤더 */}
         <div className="text-center space-y-2">
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-900">
-            계근 입력
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
+            🚛 화물차 계근 시스템
           </h1>
+          <p className="text-xl md:text-2xl text-gray-600">
+            정보를 입력해주세요
+          </p>
         </div>
 
-        {/* 자동 정보 */}
-        <Card className="border-2 bg-gray-50">
-          <CardContent className="pt-6 space-y-3">
-            <div className="flex items-center gap-3 text-2xl">
-              <span className="font-semibold">📍</span>
-              <span className="text-gray-900 font-bold">{location}</span>
+        {/* 자동 정보 카드 */}
+        <Card className="border-2 border-blue-200 bg-blue-50">
+          <CardHeader>
+            <CardTitle className="text-2xl">자동 입력 정보</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="flex items-center gap-3 text-xl">
+              <span className="font-semibold">📍 위치:</span>
+              <span className="text-blue-700 font-bold">{location}</span>
             </div>
             <div className="flex items-center gap-3 text-xl">
-              <span className="font-semibold">📅</span>
+              <span className="font-semibold">📅 날짜:</span>
               <span className="text-gray-700">{currentDate}</span>
             </div>
             <div className="flex items-center gap-3 text-xl">
-              <span className="font-semibold">⏰</span>
+              <span className="font-semibold">⏰ 시간:</span>
               <span className="text-gray-700">{currentTime}</span>
             </div>
           </CardContent>
@@ -167,7 +183,13 @@ export default function Home() {
 
         {/* 입력 폼 */}
         <Card className="border-2">
-          <CardContent className="pt-6">
+          <CardHeader>
+            <CardTitle className="text-3xl">계근 정보 입력</CardTitle>
+            <CardDescription className="text-lg">
+              모든 필수 항목을 입력해주세요
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 {/* 소속 선택 */}
@@ -353,13 +375,26 @@ export default function Home() {
                   >
                     취소
                   </Button>
-					</div>
+                </div>
               </form>
             </Form>
           </CardContent>
         </Card>
 
-			</div>
-		</div>
-	);
+        {/* 도움말 */}
+        <Card className="bg-yellow-50 border-2 border-yellow-200">
+          <CardContent className="pt-6">
+            <div className="space-y-2 text-lg text-gray-700">
+              <p>💡 <strong>도움말:</strong></p>
+              <ul className="list-disc list-inside space-y-1 ml-4">
+                <li>모든 필수 항목(*)을 입력해주세요</li>
+                <li>사진은 선택사항입니다</li>
+                <li>입력한 정보는 자동으로 저장됩니다</li>
+              </ul>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
 }
